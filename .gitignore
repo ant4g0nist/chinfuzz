@@ -61,3 +61,6 @@ pip-selfcheck.json
 
 # Sensitive or high-churn files:
 *.key
+
+### llvm
+llvm-project

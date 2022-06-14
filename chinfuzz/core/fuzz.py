@@ -85,7 +85,7 @@ class ChinFuzz:
         """
         return atheris.FuzzedDataProvider(data)
     
-    def runOneFuzzer(self):
+    def runOneFuzzer(self, lib_fuzzer_args=[]):
         sys.path.append(f"fuzz")
         name = pathlib.Path(self.args.fuzz).stem
         with io.StringIO() as buff:
@@ -93,10 +93,11 @@ class ChinFuzz:
                 with atheris.instrument_imports():         
                     fuzz = __import__(name)
         
-        self.callChinfuzzFuzzerTestOneInput(fuzz, self.args.fuzz)
+        self.callChinfuzzFuzzerTestOneInput(fuzz, self.args.fuzz, lib_fuzzer_args)
 
-    def callChinfuzzFuzzerTestOneInput(self, fuzz, fuzzer):
-        args = [fuzzer]
+    def callChinfuzzFuzzerTestOneInput(self, fuzz, fuzzer, lib_fuzzer_args=[]):
+        args = [fuzzer] + lib_fuzzer_args
+        
         if self.args.corpus:
             args.append(self.args.corpus)
 

@@ -44,7 +44,7 @@ def chinfuzzStartFuzzer(args, env):
 
     spinner.succeed(text="Fuzzer initialized")
 
-    _fuzz.runOneFuzzer()
+    _fuzz.runOneFuzzer(lib_fuzzer_args=lib_fuzzer_args)
 
 
 def chinfuzzReplayFuzzer(args, env):
@@ -126,7 +126,15 @@ Be careful, this will potentioally overwrite files that exist in the directory."
         parser.print_help()
         exit(1)
 
-    args = parser.parse_args(args[1:])
+    # this is an 'internal' method
+    args, unknown = parser.parse_known_args()
+    global lib_fuzzer_args
+    lib_fuzzer_args = []
+    for arg in unknown:
+        if arg == "--":
+            lib_fuzzer_args = unknown[unknown.index(arg)+1:]
+            break
+
     return args.func(args, env)
 
 if __name__ == "__main__":
